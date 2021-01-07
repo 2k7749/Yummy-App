@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { View,Text,StyleSheet,Dimensions,Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import { onUpdateLocation, UserState, ApplicationState } from '../redux';
 
 import { useNavigation } from '../utils';
 
-const screenWidth = Dimensions.get('screen').width // Get Screen Width
+const { width, height } = Dimensions.get("screen"); // Get Screen Width
 
 let apiKey = 'AIzaSyAhT7k4cRGhTfYJ_i2eGZNcyDBStBmlYYY';
 
@@ -28,7 +28,7 @@ interface LandingProps{
     const [errorMsg, setErrorMsg] = useState("")
     const [address, setAddress] = useState<Location.LocationGeocodedAddress>()
     
-    const [displayAddress, setDisplayAddress] = useState("Waiting For Current Location")
+    const [displayAddress, setDisplayAddress] = useState("Đang lấy thông tin vị trí của bạn")
 
     useEffect(() => {
 
@@ -71,60 +71,55 @@ interface LandingProps{
     },  [])
 
     return (
-        <View style={styles.container}>
-            <View style={styles.navigation}/>
-            <View style={styles.body}>
-                <Image source={require('../images/delivery_icon.png')} style={styles.deliveryIcon}/>
-                <View style={styles.addressContainer}>
-                    <Text style={styles.addressTitle}> Your Delivery Address </Text>
+        
+        <View style={ styles.container }>
+             <Image
+            style={ styles.bannerImage }
+            source={ require('./../images/bannerImg.png' ) }
+            />
+            <View style={styles.marginBottom}>
+                <View>
+                <Text style={{ fontSize: 17, textAlign: 'center' }}>Chúng tôi sử dụng vị trí của bạn để giúp bạn tìm kiếm nhà hàng gần bạn nhất</Text>
                 </View>
-                    <Text style={styles.addressText}>{displayAddress}</Text>
             </View>
-            <View style={styles.footer}/>
+            <View>
+                <TouchableOpacity
+                style={styles.currenLocationBtn}
+                >
+                    <Text style={{ fontSize: 18, color: '#fff' }}>{ displayAddress }</Text>
+                </TouchableOpacity>
+            </View>
         </View>
+
     )
 
 }
 
 const styles = StyleSheet.create({
 
-    container:{
+    container: {
         flex: 1,
-        backgroundColor: 'rgba(242,242,242,1)'
-    },
-    navigation:{
-        flex: 2
-    },
-    body:{
-        flex: 9,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    deliveryIcon:{
-        width: 120,
-        height: 120
-    },
-    addressContainer:{
-        width: screenWidth - 100,
-        borderBottomColor: 'red',
-        borderBottomWidth: 0.5,
-        padding: 5,
-        marginBottom: 10,
-        alignItems: 'center'
-    },
-    addressTitle:{
-        fontSize: 24,
-        fontWeight: '700',
-        color: '#707070'
-    },
-    addressText:{
-        fontSize: 20,
-        fontWeight: '200',
-        color: '#4F4F4F'
-    },
-    footer:{
-        flex: 1
-    }
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 30,
+        backgroundColor: "#fff",
+      },
+      bannerImage: {
+        width: width,
+        height: height / 2,
+      },
+      marginBottom: {
+        marginBottom: 25
+      },
+      currenLocationBtn: {
+        backgroundColor: '#C01C27',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        width: width - 50,
+        flexDirection: "row",
+        justifyContent: "center",
+        borderRadius: 5,
+      }
 
 })
 

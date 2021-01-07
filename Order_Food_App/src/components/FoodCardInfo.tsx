@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image, Dimensions } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import { FoodModel } from '../redux';
 import { ButtonAddRemove } from './ButtonAddRemove';
+import { BASE_URL } from '../utils';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -23,16 +24,23 @@ const FoodCardInfo: React.FC<FoodCardInfoProps> = ({ item, onTap, onUpdateCart }
 
     }
 
+    const formatCurrency = (amount: number) => {
+        return Number(amount)
+          .toFixed(0)
+          .replace(/(\d)(?=(\d{3})+$)/g, '$&,');
+    }
+
 return (
 
 <View style={styles.container}>
+<Image source={{ uri: `${BASE_URL}images/${item.images[0]}`}} style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#EAEAEA', justifyContent: 'center' }}/>
     <View style={{ display:'flex', flex:1, flexDirection: 'row', justifyContent: 'space-around' }}>
         <View style={{ display: 'flex', flex: 8, padding: 10, marginTop: 10, paddingLeft: 20 }}>
             <Text style={{ fontSize: 15 , fontWeight: '600' }}>{item.name}</Text>
             <Text style={{ fontSize: 13 , fontWeight: '600' }}>{item.category}</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>{formatCurrency(item.price)} ₫</Text>
         </View>
         <View style={{ display: 'flex', flex: 4, padding: 10, justifyContent: 'space-around', alignItems: 'center', marginRight:  15}}>
-            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>{item.price}₫</Text>
             <ButtonAddRemove onAdd={() => {
                 let unit = isNaN(item.unit) ? 0 : item.unit;
                 didUpdateCart(unit + 1);
@@ -76,7 +84,7 @@ body: {
 footer: { 
     flex: 1, 
     backgroundColor: 'cyan' 
-}
+},
 
 })
 

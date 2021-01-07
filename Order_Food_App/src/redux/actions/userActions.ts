@@ -68,7 +68,7 @@ export const onUserLogin = (email: string, password: string) => {
     //EXECU ACTION
     return async ( dispatch: Dispatch<UserAction> ) => {
         try {
-            const response = await axios.post<UserModel>(`${BASE_URL}user/login`, {
+            const response = await axios.post<UserModel>(`${BASE_URL}customer/login`, {
                 email,
                 password
             })
@@ -101,7 +101,7 @@ export const onUserSignup = (email: string, phone: string, password: string) => 
     //EXECU ACTION
     return async ( dispatch: Dispatch<UserAction> ) => {
         try {
-            const response = await axios.post<UserModel>(`${BASE_URL}user/create-account`, {
+            const response = await axios.post<UserModel>(`${BASE_URL}customer/signup`, {
                 email,
                 phone,
                 password
@@ -138,7 +138,7 @@ export const onVerifyOTP = (otp: string, user: UserModel) => {
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
 
-            const response = await axios.patch<UserModel>(`${BASE_URL}user/verify`, {
+            const response = await axios.patch<UserModel>(`${BASE_URL}customer/verify`, {
                 otp
             })
 
@@ -174,7 +174,7 @@ export const onOTPRequest = (user: UserModel) => {
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
 
-            const response = await axios.get<UserModel>(`${BASE_URL}user/otp`)
+            const response = await axios.get<UserModel>(`${BASE_URL}customer/otp`)
 
             console.log(response)
 

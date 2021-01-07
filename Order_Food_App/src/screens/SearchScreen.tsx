@@ -29,6 +29,7 @@ const _SearchScreen: React.FC<SearchScreenProps> = (props) => {
     const onTapFood = (item: FoodModel) => {
         navigate('FoodDetailPage', { food: item })
     }
+    
 
 return (<View style={styles.container}>
 
@@ -66,9 +67,10 @@ container: {
 },
 navigation: { 
     flex:1, 
-    marginTop:43 
+    marginTop:50 
 },
 body: { 
+    paddingTop: 15,
     flex:10, 
     justifyContent: 'center', 
     alignItems: 'center' 

@@ -44,7 +44,7 @@ container: {
         width: 340, 
         backgroundColor: '#DBDBDB', 
         height: 50, 
-        borderRadius: 30, 
+        borderRadius: 5, 
         justifyContent: 'center', 
         alignItems: 'center', 
         margin: 10, 

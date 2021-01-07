@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { ApplicationState, ShoppingState, FoodModel, onUpdateCart, UserState } from '../redux';
 import { connect } from 'react-redux';
-import { SearchBar, ButtonWithIcon, FoodCardInfo, ButtonWithTitle } from '../components';
+import { SearchBar, ButtonWithIcon, FoodCardInfo, ButtonWithTitle, FlatText } from '../components';
 import { FlatList } from 'react-native-gesture-handler';
 import { checkExistence, useNavigation } from '../utils';
 
@@ -64,6 +64,12 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
 
     }
 
+    const formatCurrency = (amount: number) => {
+        return Number(amount)
+          .toFixed(0)
+          .replace(/(\d)(?=(\d{3})+$)/g, '$&,');
+    }
+
     
 
     if(Cart.length > 0){
@@ -88,12 +94,18 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
                 <View style={styles.footer}>
                     <View style={styles.amountView}>
                         <Text style={{ fontSize: 18 }}> Total</Text>
-                        <Text style={{ fontSize: 18 }}> {totalAmount}</Text>
+                        <Text style={{ fontSize: 18 }}> {formatCurrency(totalAmount)} ₫</Text>
                     </View>
+                    {/* <View style={ styles.bottomButton }>
                     <ButtonWithTitle title={"Order Now"} onTap={onValidateOrder} height={50} width={250}/>
-
+                    </View> */}
+                   
                 </View>
-
+                <View>
+                        <TouchableOpacity style={styles.bottomButton} onPress={() => onValidateOrder()}>
+                        <FlatText text="Đặt món" font="q_semibold" sizeText={20} color="#fff"/>
+                        </TouchableOpacity>
+                </View>
             </View>
 
         )
@@ -136,7 +148,12 @@ amountView: {
     justifyContent: 'space-between', 
     paddingLeft: 20, 
     paddingRight: 20
-}
+},
+bottomButton: {
+    alignItems: 'center',
+    backgroundColor: '#C01C27',
+    paddingVertical: 20
+  },
 
 })
 

@@ -24,6 +24,12 @@ const FoodCard: React.FC<FoodCardProps> = ({ item, onTap, onUpdateCart }) => {
 
     }
 
+    const formatCurrency = (amount: number) => {
+        return Number(amount)
+          .toFixed(0)
+          .replace(/(\d)(?=(\d{3})+$)/g, '$&,');
+    }
+
 return (
 
     <View style={styles.container}>
@@ -34,7 +40,7 @@ return (
             <Text>{item.category}</Text>
         </View>
         <View style={{ display: 'flex', flex: 5, padding: 10, justifyContent: 'space-around', alignItems: 'center', marginRight:  15}}>
-            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>{item.price}₫</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>{formatCurrency(item.price)} ₫</Text>
             <ButtonAddRemove onAdd={() => {
                 let unit = isNaN(item.unit) ? 0 : item.unit;
                 didUpdateCart(unit + 1);

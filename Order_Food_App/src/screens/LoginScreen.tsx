@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { ApplicationState, onUserLogin, onUserSignup, UserState, onVerifyOTP, onOTPRequest } from '../redux';
-import {  ButtonWithTitle, TextField } from '../components';
+import {  ButtonWithTitle, TextField, FlatText } from '../components';
 import { useNavigation } from '../utils';
 
 interface LoginProps{ 
@@ -14,6 +14,7 @@ interface LoginProps{
     onVerifyOTP: Function
 
  }
+ 
 const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userReducer, onOTPRequest, onVerifyOTP  }) => {
 
     const [email, setEmail] = useState('');
@@ -62,8 +63,10 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
     const onTapAuthenticate = () => {
 
         if(isSignup){
+            console.log('SIGNUP')
             onUserSignup(email, phone, password)
         }else{
+            console.log('LOGIN')
             onUserLogin(email, password)
         }
     }
@@ -109,35 +112,86 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
 
     if(!verified){
         //Show OTP page
-        return (<View style={styles.container}>
+        return (
+        <View style={styles.container}>
                 <View style={styles.body}>
                     <Image source={require('../images/verify_otp.png')} style={{ width: 120, height: 120, margin: 20 }}/>
-                    <Text style={{ fontSize: 22, fontWeight: '500', margin: 10 }}> Verification</Text>
-                    <Text style={{ fontSize: 14, padding: 10, marginBottom: 20, color: '#716F6F' }}> Enter your OTP sent to your mobile number</Text>
+                    <View style={styles.title}>
+                        <FlatText text="Xác minh tài khoản" font="q_semibold" sizeText={22} />
+                    </View>
+                    <View style={styles.title}>
+                        <FlatText text="Nhập mã OTP chúng tôi đã gửi cho bạn vào bên dưới, để xác minh tài khoản" font="q_semibold" sizeText={14} />
+                    </View>
                     <TextField isOTP={true} placeholder="OTP" onTextChange={() => {}} />
 
-                    <ButtonWithTitle title="Verify OTP" onTap={onTapVerify} width={320} height={50} />
+                    <View>
+                        <TouchableOpacity style={[styles.btn, {width: 220}]} onPress={onTapVerify}>
+                            <FlatText text='Xác Minh OTP' font="q_semibold" sizeText={18} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
                     <ButtonWithTitle disable={!canRequestOtp} title={requestOtpTitle} isNoBg={true} onTap={onTapRequestNewOTP} width={320} height={50} />
 
                 </View>
                 <View style={styles.footer}></View>
-            </View>)
+            </View>
+            )
 
     }else{
-        return (<View style={styles.container}>
-            <View style={styles.navigation}><Text style={{ fontSize: 30 }}> Login </Text></View>
-            <View style={styles.body}>
-                <TextField placeholder="Email" onTextChange={setEmail} />
-                { isSignup && 
-                <TextField placeholder="Phone" onTextChange={setPhone} />
-                 }
-                <TextField placeholder="Passowrd" onTextChange={setPassword} isSecure={true} />
-                <ButtonWithTitle title={title} onTap={onTapAuthenticate} width={340} height={50} />
-                <ButtonWithTitle title={!isSignup ? "No Account? Signup Here" : "Have an Account? Login Here"} onTap={() => onTapOptions()} width={340} height={50} isNoBg={true}/>
-            </View>
-            <View style={styles.footer}></View>
-            </View>)
-    }
+        return (
+
+        <View style={styles.flex}>
+            <ScrollView>
+                <View style={styles.mainContainer}>
+                    <View style={styles.title}>
+                        <FlatText text="Login Your Account" font="q_semibold" sizeText={20} />
+                    </View>
+                    {/* {this.state.errormessage != "" ? <View style={styles.errorMessage}> 
+                        <FlatText text={this.state.errormessage} font="q_regular" size={16} color="#C01C27" />
+                    </View> : <FlatText/>}*/}
+                    <View style={styles.formGroup}>
+                        <FlatText text="Địa chỉ Email" font="q_regular" sizeText={17} />
+                        <TextInput style={styles.textInput} placeholder="Enter Your Email" onChangeText={setEmail}/>
+                    </View>
+                    { isSignup && 
+                        <View style={styles.formGroup}>
+                        <FlatText text="Số điện thoại" font="q_regular" sizeText={17} />
+                        <TextInput style={styles.textInput} placeholder="Enter Your Email" onChangeText={setPhone}/>
+                    </View>
+                    }
+                    <View style={styles.formGroup}>
+                        <FlatText text="Mật khẩu" font="q_regular" sizeText={17} />
+                        <TextInput style={styles.textInput} placeholder="Enter Your Password" onChangeText={setPassword} />
+                    </View>
+                    <View>
+                        <TouchableOpacity style={styles.btn} onPress={onTapAuthenticate}>
+                            <FlatText text={title} font="q_semibold" sizeText={18} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity style={styles.textCenter} onPress={() => onTapOptions()}>
+                            <FlatText text={!isSignup ? "Chưa có tài khoản? Đăng ký ngay" : "Nếu đã có tài khoản? bạn hãy đăng nhập"} font="q_regular" sizeText={16} color="#666" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ScrollView>
+        </View>    
+
+
+        // <View style={styles.container}>
+        //     <View style={styles.navigation}><Text style={{ fontSize: 30 }}> Login </Text></View>
+        //     <View style={styles.body}>
+        //         <TextField placeholder="Email" onTextChange={setEmail} />
+        //         { isSignup && 
+        //         <TextField placeholder="Phone" onTextChange={setPhone} />
+        //          }
+        //         <TextField placeholder="Passowrd" onTextChange={setPassword} isSecure={true} />
+        //         <ButtonWithTitle title={title} onTap={onTapAuthenticate} width={340} height={50} />
+        //         <ButtonWithTitle title={!isSignup ? "No Account? Signup Here" : "Have an Account? Login Here"} onTap={() => onTapOptions()} width={340} height={50} isNoBg={true}/>
+        //     </View>
+        //     <View style={styles.footer}></View>
+        // </View>
+            
+            )}
 
 
 }
@@ -145,18 +199,63 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
 
 const styles = StyleSheet.create({
     
-container: { flex: 1 },
-navigation: { 
-    flex: 1, 
-    paddingLeft: 50, 
-    paddingTop: 50
-},
-body: { 
-    flex: 10, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
-},
-footer: { flex: 1 }
+    flex: {
+        flex: 1
+    },
+    mainContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 40
+    },
+    title: {
+        padding: 20,
+        marginBottom: 7,
+        paddingBottom: 50,
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        paddingVertical: 20,
+        borderRadius: 5,
+        paddingHorizontal: 20,
+        marginTop: 10
+    },
+    formGroup: {
+        marginBottom: 20
+    },
+    btn: {
+        alignItems: 'center',
+        backgroundColor: '#C01C27',
+        paddingVertical: 20,
+        borderRadius: 5
+    },
+    textCenter: {
+        alignItems: 'center',
+        marginTop: 20
+    },
+    errorMessage: {
+        marginBottom: 7
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+
+
+
+
+    navigation: { 
+        flex: 1, 
+        paddingLeft: 50, 
+        paddingTop: 50
+    },
+    body: { 
+        flex: 10, 
+        justifyContent: 'center', 
+        alignItems: 'center' 
+    },
+    footer: { flex: 1 }
 
 })
 
