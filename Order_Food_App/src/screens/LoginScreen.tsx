@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { ApplicationState, onUserLogin, onUserSignup, UserState, onVerifyOTP, onOTPRequest } from '../redux';
 import {  ButtonWithTitle, TextField, FlatText } from '../components';
@@ -25,7 +25,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
 
     const [otp, setOtp] = useState('')
     const [verified, setVerified] = useState(true) // testing function
-    const [requestOtpTitle, setRequestOtpTitle] = useState('Request a New OTP in')
+    const [requestOtpTitle, setRequestOtpTitle] = useState('')
     const [canRequestOtp, setCanRequestOtp] = useState(false)
 
     let countDown: number;
@@ -39,8 +39,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
         if(user.verified !== undefined){
 
             if(user.verified === true){
-                //navigate to cart page
-                navigate('CartPage')
+                navigate('HomePage')
             }else{
                 setVerified(user.verified);
                 onEnableOtprequest()
@@ -52,6 +51,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
         }
 
     }, [user]);
+    
 
     const onTapOptions = () => {
 
@@ -63,10 +63,17 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
     const onTapAuthenticate = () => {
 
         if(isSignup){
-            console.log('SIGNUP')
+            console.log('CLICK SIGNUP')
             onUserSignup(email, phone, password)
         }else{
-            console.log('LOGIN')
+            if(email == '' || password == ''){
+                Alert.alert('Thông báo', 'Kiểm tra và vui lòng điền đầy đủ thông tin',
+                [
+                    { text: 'OK' }
+                  ],
+                  { cancelable: false }
+            )
+            }
             onUserLogin(email, password)
         }
     }
@@ -77,30 +84,37 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
         otpDate.setTime(new Date().getTime() + (2 * 60 * 1000));
         const otpTime = otpDate.getTime();
 
-        countDown = setInterval(function(){
+        countDown = setInterval( () => {
 
             const currentTime = new Date().getTime()
 
             const totalTime = otpTime - currentTime;
 
-            let minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60))
-            let seconds = Math.floor((totalTime % (1000 * 60)) / 1000)
+            //let minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60))
+            let seconds = Math.floor((totalTime % (1000 * 30)) / 1000)
 
-            setRequestOtpTitle(`Request a New OTP in ${minutes}:${seconds}`)
+            setRequestOtpTitle(`Yêu cầu mã OTP mới vui lòng chờ ${seconds}s`)
 
-            if(minutes < 1 && seconds < 1){
-                setRequestOtpTitle(`Request a New OTP`)
+            if(seconds < 1){
+                setRequestOtpTitle(`Yêu cầu mã OTP mới`)
                 setCanRequestOtp(true)
                 clearInterval(countDown);
             }
 
-        },1000)
+        }, 300);
         
     }
 
     const onTapVerify = () => {
+        if(otp == ''){
+            Alert.alert('Thông báo', 'Mã OTP không thể để trống',
+                [
+                    { text: 'OK' }
+                  ],
+                  { cancelable: false }
+            )
+        }
         //console.log("click Verify");
-        
         onVerifyOTP(otp, user)
 
     }
@@ -122,7 +136,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
                     <View style={styles.title}>
                         <FlatText text="Nhập mã OTP chúng tôi đã gửi cho bạn vào bên dưới, để xác minh tài khoản" font="q_semibold" sizeText={14} />
                     </View>
-                    <TextField isOTP={true} placeholder="OTP" onTextChange={() => {}} />
+                    <TextField isOTP={true} placeholder="OTP" onTextChange={setOtp} />
 
                     <View>
                         <TouchableOpacity style={[styles.btn, {width: 220}]} onPress={onTapVerify}>
@@ -150,17 +164,17 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
                     </View> : <FlatText/>}*/}
                     <View style={styles.formGroup}>
                         <FlatText text="Địa chỉ Email" font="q_regular" sizeText={17} />
-                        <TextInput style={styles.textInput} placeholder="Enter Your Email" onChangeText={setEmail}/>
+                        <TextInput style={styles.textInput} placeholder="Địa chỉ Email" onChangeText={setEmail}/>
                     </View>
                     { isSignup && 
                         <View style={styles.formGroup}>
                         <FlatText text="Số điện thoại" font="q_regular" sizeText={17} />
-                        <TextInput style={styles.textInput} placeholder="Enter Your Email" onChangeText={setPhone}/>
+                        <TextInput style={styles.textInput} placeholder="Số điện thoại của bạn" onChangeText={setPhone}/>
                     </View>
                     }
                     <View style={styles.formGroup}>
                         <FlatText text="Mật khẩu" font="q_regular" sizeText={17} />
-                        <TextInput style={styles.textInput} placeholder="Enter Your Password" onChangeText={setPassword} />
+                        <TextInput secureTextEntry={true} style={styles.textInput} placeholder="Mật khẩu" onChangeText={setPassword} />
                     </View>
                     <View>
                         <TouchableOpacity style={styles.btn} onPress={onTapAuthenticate}>
@@ -175,21 +189,6 @@ const _LoginScreen: React.FC<LoginProps> = ({ onUserSignup, onUserLogin, userRed
                 </View>
             </ScrollView>
         </View>    
-
-
-        // <View style={styles.container}>
-        //     <View style={styles.navigation}><Text style={{ fontSize: 30 }}> Login </Text></View>
-        //     <View style={styles.body}>
-        //         <TextField placeholder="Email" onTextChange={setEmail} />
-        //         { isSignup && 
-        //         <TextField placeholder="Phone" onTextChange={setPhone} />
-        //          }
-        //         <TextField placeholder="Passowrd" onTextChange={setPassword} isSecure={true} />
-        //         <ButtonWithTitle title={title} onTap={onTapAuthenticate} width={340} height={50} />
-        //         <ButtonWithTitle title={!isSignup ? "No Account? Signup Here" : "Have an Account? Login Here"} onTap={() => onTapOptions()} width={340} height={50} isNoBg={true}/>
-        //     </View>
-        //     <View style={styles.footer}></View>
-        // </View>
             
             )}
 

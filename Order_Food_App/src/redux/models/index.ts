@@ -51,7 +51,7 @@ export interface FoodAvailability{
 export interface UserModel{
 
     email: string;
-    token: string;
+    signature: string;
     verified: boolean;
 
 }
@@ -62,6 +62,7 @@ export interface UserState{
     location: LocationGeocodedAddress;
     error: string | undefined;
     Cart: [FoodModel]
+    Order: [OrderState];
 
 }
 
@@ -71,4 +72,15 @@ export interface ShoppingState{
     availableFoods: [FoodModel]
     //other models
     
+}
+
+export interface OrderState{
+    _id: string,
+    orderID: string,
+    items: [FoodModel],
+    totalAmount: number,
+    orderDate: string,
+    paidThrough: string,
+    paymentResponse: string, 
+    orderStatus: string
 }

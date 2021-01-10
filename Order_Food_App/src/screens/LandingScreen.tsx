@@ -5,6 +5,10 @@ import * as Location from 'expo-location';
 import { connect } from 'react-redux';
 import { onUpdateLocation, UserState, ApplicationState } from '../redux';
 
+import axios from 'axios';
+
+import { BASE_URL } from '../utils';
+
 import { useNavigation } from '../utils';
 
 const { width, height } = Dimensions.get("screen"); // Get Screen Width
@@ -25,10 +29,10 @@ interface LandingProps{
 
     const { navigate } = useNavigation()
 
-    const [errorMsg, setErrorMsg] = useState("")
-    const [address, setAddress] = useState<Location.LocationGeocodedAddress>()
+    const [ errorMsg, setErrorMsg ] = useState("")
+    const [ address, setAddress ] = useState<Location.LocationGeocodedAddress>()
     
-    const [displayAddress, setDisplayAddress] = useState("Đang lấy thông tin vị trí của bạn")
+    const [ displayAddress, setDisplayAddress ] = useState("Đang lấy thông tin vị trí của bạn")
 
     useEffect(() => {
 
@@ -47,10 +51,24 @@ interface LandingProps{
              if(coords){
                  const { latitude, longitude } = coords;
                  let addressResponse: any = await Location.reverseGeocodeAsync({latitude, longitude})
+                 let addressResponsePostalCode: any
+                 let cityNameNonSpace: any
+                  
+                 
+                 //console.log(addressResponsePostalCode)
+                 //console.log("GET LATITUDE AND LOGTITUDE ON MAP" + latitude + ' '+ longitude)
                  for(let item of addressResponse){
+                    await axios.get(`${BASE_URL}images/cities_vn.json`).then( (res) => {
+                        if(res){
+                            cityNameNonSpace = item.region.replace(/\s/g,'')
+                            addressResponsePostalCode = res.data
+                            let finPostalCode = addressResponsePostalCode.find( (finPostalCode: any) => finPostalCode.city === cityNameNonSpace)
+                            item.postalCode = finPostalCode.postalcode
+                        }
+                     })
                      setAddress(item)
                      onUpdateLocation(item)
-                     let currentAddress = `${item.name}, ${item.street}, ${item.city}, ${item.postalCode}`
+                     let currentAddress = `${item.name}, ${item.street}, ${item.subregion}, ${item.region} ( ${item.postalCode} )`
                      setDisplayAddress(currentAddress)
 
                     if(currentAddress.length > 0){

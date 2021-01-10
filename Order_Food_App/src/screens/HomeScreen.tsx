@@ -5,11 +5,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '../utils';
 
 import { connect } from 'react-redux';
-import { ButtonWithIcon, CategoryCard, SearchBar, FlatText } from '../components';
-import { RestaurantCard } from '../components/restaurantCard'
+import { CategoryCard, SearchBar, FlatText } from '../components';
+import { AppHeader } from '../components/AppHeader';
+import { RestaurantCard } from '../components/restaurantCard';
 import { AvailableFoodCard } from '../components/AvailableFoodCard';
-import { onAvailability, UserState, ApplicationState, ShoppingState, Restaurant, FoodModel, onSearchFoods } from '../redux';
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { onAvailability, UserState, ApplicationState, ShoppingState, Restaurant, FoodModel, onSearchFoods, } from '../redux';
+
 
 
 import { LogBox } from 'react-native';
@@ -19,7 +20,7 @@ interface HomeProps{
     userReducer: UserState,
     shoppingReducer: ShoppingState,
     onAvailability: Function,
-    onSearchFoods: Function
+    onSearchFoods: Function,
     
 }
 
@@ -34,11 +35,10 @@ const _HomeScreen: React.FC<HomeProps> = (props) => {
     
     useEffect(() => {
         LogBox.ignoreLogs(["Require cycle"]);
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
         props.onAvailability(location.postalCode)
-        // const localx = JSON.stringify(location)
-        // console.log(`${localx}`);
         setTimeout(() => {
-            props.onSearchFoods('700000') // PUSH POSTALCODE TO REDUCER
+            props.onSearchFoods(location.postalCode) // PUSH POSTALCODE TO REDUCER
         }, 1000)
     }, [])
 
@@ -52,44 +52,8 @@ const _HomeScreen: React.FC<HomeProps> = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={ styles.headerContainer }>
-                <View>
-                    <FlatText
-                        text="Địa chỉ nhận"
-                        font="q_semibold"
-                        color="#333"
-                        sizeText={17}
-                    />
-                    <View style={ styles.dFlex }>
-                        <SimpleLineIcons
-                        style={ styles.locationIcon }
-                        name="location-pin"
-                        size={15}
-                        color="#666"
-                        />
-                        <FlatText
-                        text={`${location.name},${location.street},${location.city}`}
-                        font="q_medium"
-                        color="#666"
-                        sizeText={14}
-                        />
-                    </View>
-                </View>
-                {(() => {
-                    // console.log(user.verified)
-                    if ( user.verified ) {
-                        return (
-                        <View>
-                            <Image
-                            style={ styles.profileImg }
-                            source={{ uri: "https://ui-avatars.com/api/?background=random&size=100&name=" + user.email }}
-                            />
-                        </View>
-                        )
-                    }
-                    return null;
-                })()}
-            </View>
+           {/* Header Herer */}
+            <AppHeader userReducer={props.userReducer} />
             <View style={{ display: 'flex', height: 60, justifyContent: 'space-around', flexDirection: 'row', alignItems: 'center', marginLeft: 4 }}>
                 <SearchBar 
                 didTouch={() => {
@@ -175,39 +139,6 @@ const styles = StyleSheet.create({
     paddingLeft: {
         marginBottom: 10
     },
-    
-    //Header
-    headerContainer: {
-        paddingTop: 40,
-        paddingHorizontal: 20,
-        backgroundColor: "#fff",
-        paddingBottom: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    profileImg: {
-        width: 45,
-        height: 45,
-        borderRadius: 60,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    location: {
-        fontSize: 14,
-        color: "#666",
-    },
-    dFlex: {
-        flexDirection: "row",
-    },
-    arrowIcon: {
-        paddingLeft: 5,
-        paddingTop: 1,
-    },
-    locationIcon: {
-        marginTop: 4,
-        marginRight: 5
-    }
 
 })
 

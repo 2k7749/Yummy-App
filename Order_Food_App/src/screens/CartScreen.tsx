@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
-import { ApplicationState, ShoppingState, FoodModel, onUpdateCart, UserState } from '../redux';
+import { ApplicationState, ShoppingState, FoodModel, onUpdateCart, UserState, onUserOrder } from '../redux';
 import { connect } from 'react-redux';
 import { SearchBar, ButtonWithIcon, FoodCardInfo, ButtonWithTitle, FlatText } from '../components';
 import { FlatList } from 'react-native-gesture-handler';
@@ -11,6 +11,7 @@ interface CartScreenProps{
     userReducer: UserState,
     shoppingReducer: ShoppingState,
     onUpdateCart: Function
+    onUserOrder: Function
 
 }
 
@@ -27,7 +28,7 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
 
     const { Cart, user } = props.userReducer // check cart
     
-    console.log(user);
+    //console.log(user);
 
     const onTapFood = (item: FoodModel) => {
         navigate('FoodDetailPage', { food: item })
@@ -58,8 +59,7 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
             navigate('LoginPage')
         }else{
             //navigate to order
-            console.log("now we can order ");
-            
+            navigate('OrderPage', {dataCart: Cart})
         }
 
     }
@@ -93,8 +93,8 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
 
                 <View style={styles.footer}>
                     <View style={styles.amountView}>
-                        <Text style={{ fontSize: 18 }}> Total</Text>
-                        <Text style={{ fontSize: 18 }}> {formatCurrency(totalAmount)} ₫</Text>
+                        <Text style={{ fontSize: 18 }}> Tạm tính</Text>
+                        <Text style={{ fontSize: 18, color: 'green' }}> {formatCurrency(totalAmount)} ₫</Text>
                     </View>
                     {/* <View style={ styles.bottomButton }>
                     <ButtonWithTitle title={"Order Now"} onTap={onValidateOrder} height={50} width={250}/>
@@ -103,7 +103,7 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
                 </View>
                 <View>
                         <TouchableOpacity style={styles.bottomButton} onPress={() => onValidateOrder()}>
-                        <FlatText text="Đặt món" font="q_semibold" sizeText={20} color="#fff"/>
+                        <FlatText text="Thanh toán" font="q_semibold" sizeText={20} color="#fff"/>
                         </TouchableOpacity>
                 </View>
             </View>
@@ -113,7 +113,7 @@ const _CartScreen: React.FC<CartScreenProps> = (props) => {
        return(
 
             <View style={{ flex:1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 25, fontWeight: '700' }}> Your Cart is Empty!! </Text>
+                <Text style={{ fontSize: 25, fontWeight: '700' }}> Giỏ hàng của bạn đang trống!! </Text>
             </View>
 
        ) 
@@ -162,6 +162,6 @@ const mapStateToProps = (state: ApplicationState) => ({
    userReducer: state.userReducer
 })
 
-const CartScreen = connect(mapStateToProps, { onUpdateCart })(_CartScreen)
+const CartScreen = connect(mapStateToProps, { onUpdateCart, onUserOrder })(_CartScreen)
 
 export { CartScreen }

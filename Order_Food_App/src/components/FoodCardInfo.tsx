@@ -37,8 +37,8 @@ return (
     <View style={{ display:'flex', flex:1, flexDirection: 'row', justifyContent: 'space-around' }}>
         <View style={{ display: 'flex', flex: 8, padding: 10, marginTop: 10, paddingLeft: 20 }}>
             <Text style={{ fontSize: 15 , fontWeight: '600' }}>{item.name}</Text>
-            <Text style={{ fontSize: 13 , fontWeight: '600' }}>{item.category}</Text>
-            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>{formatCurrency(item.price)} ₫</Text>
+            <Text style={{ fontSize: 13 , fontWeight: '600' }}>Loại: {item.category}</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: '#7C7C7C' }}>Giá: {formatCurrency(item.price)} ₫</Text>
         </View>
         <View style={{ display: 'flex', flex: 4, padding: 10, justifyContent: 'space-around', alignItems: 'center', marginRight:  15}}>
             <ButtonAddRemove onAdd={() => {

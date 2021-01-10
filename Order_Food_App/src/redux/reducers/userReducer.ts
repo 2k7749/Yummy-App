@@ -1,18 +1,19 @@
 import { LocationGeocodedAddress } from 'expo-location';
 import { UserAction } from '../actions';
-import { UserModel, FoodModel, UserState } from '../models';
+import { UserModel, FoodModel, UserState, OrderState } from '../models';
 
 const initialState: UserState = {
 
     user: {} as UserModel,
     location: {} as LocationGeocodedAddress,
     error: undefined,
-    Cart: {} as [FoodModel]
+    Cart: {} as [FoodModel],
+    Order: {} as [OrderState]
 
 }
 
 const UserReducer = (state: UserState = initialState, action: UserAction) => {
-
+    console.log("ACTION REDUCER EVENT LISTEN IS: " + JSON.stringify(action));
     switch (action.type) {
         case 'ON_UPDATE_LOCATION':
             return{
@@ -31,7 +32,7 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
             if(existingFoods.length > 0){ // Check sp hien tai de + them
                 let updateCart = state.Cart.map((food) => {
                     if(food._id === action.payload._id){
-                        food.unit = action.payload.unit
+                        food.unit = action.payload.unit // ADD UNIT
                     }
                     return food;
                 })
@@ -50,7 +51,22 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
         case "ON_USER_LOGIN":
             return{
                 ...state, user: action.payload
-            } ;
+            };
+
+        case "ON_USER_LOGOUT":
+            return{
+                ...state, user: action.payload
+            };
+
+        case "ON_USER_ORDER":
+            return{
+                ...state, Cart: {}
+            }
+
+        case "ON_USER_GET_ORDER_HISTORY":
+            return{
+                ...state, Order: action.payload
+            }
 
         default:
             return state;

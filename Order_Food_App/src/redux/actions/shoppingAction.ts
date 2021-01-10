@@ -41,10 +41,8 @@ export const onAvailability = (postCode: string) => {
     //ECUX ACTION
     return async ( dispatch: Dispatch<ShoppingAction> ) => {
         try {
-            //https://online-foods.herokuapp.com/food/availability/78787878
-            //const response = await axios.get<FoodAvailability>(`${BASE_URL}/food/availability/78787878${postCode}`)
            // const response = await axios.get<FoodAvailability>(`${BASE_URL}food/availability/700000`)
-           const response = await axios.get<FoodAvailability>(`${BASE_URL}food/availability/700000`)
+           const response = await axios.get<FoodAvailability>(`${BASE_URL}food/availability/${postCode}`)
             if(!response){
                 dispatch({
                     type:'ON_SHOPPING_ERROR',

@@ -31,7 +31,7 @@ const _RestaurantScreen: React.FC<RestaurantProps> = (props) => {
 
 return (<View style={styles.container}>
            <View style={styles.navigation}>
-                 <ButtonWithIcon icon={require('../images/back_arrow.png')} onTap={() => goBack()} width={42} height={42} />
+                 <ButtonWithIcon icon={require('../images/back_arrow.png')} onTap={() => goBack()} width={30} height={30} />
                  <Text style={{ fontSize: 22, fontWeight: '600', marginLeft: 80 }}> {restaurant.name} </Text>
            </View>
            <View style={styles.body}>
@@ -65,7 +65,7 @@ navigation: {
     marginTop: 43, 
     paddingLeft: 10, 
     flexDirection: 'row', 
-    alignItems: 'center' 
+    alignItems: 'center',
 },
 body: { 
     flex:11, 

@@ -18,6 +18,11 @@ import { store } from './src/redux';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { UserScreen } from './src/screens/UserScreen';
+import { OrderScreen } from './src/screens/OrderScreen';
+import { ThanksScreen } from './src/screens/ThanksScreen';
+import { OrderHistoryScreen } from './src/screens/OrderHistoryScreen';
+import { OrderDetailScreen } from './src/screens/OrderDetailScreen';
 
 
 
@@ -39,12 +44,12 @@ const switchNavigator = createSwitchNavigator({
 
       //Create ICON FOOTER
       //Home tab Icon
-      home:{
+      Home:{
         screen: createStackNavigator({
           HomePage: HomeScreen,
           SearchPage: SearchScreen,
           RestaurantPage: RestaurantScreen,
-          FoodDetailPage: FoodDetailScreen
+          FoodDetailPage: FoodDetailScreen,
         },{
           defaultNavigationOptions: {
             headerShown: false,
@@ -58,10 +63,15 @@ const switchNavigator = createSwitchNavigator({
         }
       },
 
-      //Offer tab Icon
-      Offer:{
+      //Order tab Icon
+      Order:{
         screen: createStackNavigator({
-          OfferPage: HomeScreen
+          OrderHistoryPage: OrderHistoryScreen,
+          OrderDetailPage: OrderDetailScreen
+        },{
+          defaultNavigationOptions: {
+            headerShown: false,
+          }
         }),
         navigationOptions:{
           tabBarIcon: ({focused, tintColor}) => {
@@ -75,7 +85,8 @@ const switchNavigator = createSwitchNavigator({
       Cart:{
         screen: createStackNavigator({
           CartPage: CartScreen, 
-          LoginPage: LoginScreen
+          OrderPage: OrderScreen,
+          ThanksPage: ThanksScreen
         },{
           defaultNavigationOptions: {
             headerShown: false,
@@ -92,8 +103,12 @@ const switchNavigator = createSwitchNavigator({
       //Account tab Icon
       Account:{
         screen: createStackNavigator({
-          AccountPage: HomeScreen,
+          UserPage: UserScreen,
           LoginPage: LoginScreen
+        },{
+          defaultNavigationOptions: {
+            headerShown: false,
+          }
         }),
         navigationOptions:{
           tabBarIcon: ({focused, tintColor}) => {
